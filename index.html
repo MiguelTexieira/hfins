@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Howelly's Fins | Recycled Decks. Endless Waves.</title>
+  <meta name="description" content="Handcrafted surfboard fins made from recycled skateboards by Miguel Howell. Unique, sustainable, and built for performance.">
+  <style>
+    /* ==================== CSS Reset & Base ==================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      /* Ocean & Skate Color Palette */
+      --deep-ocean: #0a3d4c;
+      --teal: #1a6b7c;
+      --seafoam: #4ecdc4;
+      --sand: #f5e6d3;
+      --sand-light: #faf6f0;
+      --coral: #ff6b6b;
+      --sunset-orange: #ffa94d;
+      --charcoal: #2d3436;
+      --white: #ffffff;
+
+      /* Typography */
+      --font-heading: 'Segoe UI', system-ui, sans-serif;
+      --font-body: 'Segoe UI', system-ui, sans-serif;
+
+      /* Spacing */
+      --header-height: 70px;
+      --header-height-shrunk: 55px;
+
+      /* Transitions */
+      --transition-fast: 0.2s ease;
+      --transition-medium: 0.3s ease;
+      --transition-slow: 0.5s ease;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--sand-light);
+      color: var(--charcoal);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    ul {
+      list-style: none;
+    }
+
+    /* ==================== Header & Navigation ==================== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--header-height);
+      background: var(--white);
+      box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      transition: height var(--transition-medium), box-shadow var(--transition-medium);
+    }
+
+    .header.shrunk {
+      height: var(--header-height-shrunk);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--deep-ocean);
+      letter-spacing: -0.5px;
+      transition: font-size var(--transition-medium);
+    }
+
+    .logo span {
+      color: var(--seafoam);
+    }
+
+    .header.shrunk .logo {
+      font-size: 1.25rem;
+    }
+
+    /* Hamburger Menu */
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 40px;
+      height: 40px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      z-index: 1001;
+      padding: 0;
+    }
+
+    .hamburger-line {
+      width: 28px;
+      height: 3px;
+      background-color: var(--deep-ocean);
+      border-radius: 2px;
+      transition: all var(--transition-medium);
+      position: relative;
+    }
+
+    .hamburger-line::before,
+    .hamburger-line::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      width: 28px;
+      height: 3px;
+      background-color: var(--deep-ocean);
+      border-radius: 2px;
+      transition: all var(--transition-medium);
+    }
+
+    .hamburger-line::before {
+      top: -8px;
+    }
+
+    .hamburger-line::after {
+      top: 8px;
+    }
+
+    /* Hamburger to X animation */
+    .hamburger.active .hamburger-line {
+      background-color: transparent;
+    }
+
+    .hamburger.active .hamburger-line::before,
+    .hamburger.active .hamburger-line::after {
+      background-color: var(--white);
+    }
+
+    .hamburger.active .hamburger-line::before {
+      top: 0;
+      transform: rotate(45deg);
+    }
+
+    .hamburger.active .hamburger-line::after {
+      top: 0;
+      transform: rotate(-45deg);
+    }
+
+    /* Mobile Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 100%;
+      max-width: 300px;
+      height: 100vh;
+      background: var(--deep-ocean);
+      padding: calc(var(--header-height) + 40px) 40px 40px;
+      transition: right var(--transition-medium);
+      z-index: 999;
+    }
+
+    .nav.active {
+      right: 0;
+    }
+
+    .nav-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity var(--transition-medium), visibility var(--transition-medium);
+      z-index: 998;
+    }
+
+    .nav-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .nav-link {
+      color: var(--white);
+      font-size: 1.25rem;
+      font-weight: 500;
+      transition: color var(--transition-fast);
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--seafoam);
+      transition: width var(--transition-medium);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link:hover {
+      color: var(--seafoam);
+    }
+
+    /* ==================== Hero Section ==================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      background:
+        linear-gradient(135deg, rgba(10, 61, 76, 0.85) 0%, rgba(26, 107, 124, 0.8) 100%),
+        url('https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=1920&q=80') center/cover no-repeat;
+      padding: calc(var(--header-height) + 40px) 20px 40px;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      opacity: 0.3;
+    }
+
+    .hero-content {
+      text-align: center;
+      z-index: 1;
+      max-width: 800px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--coral);
+      color: var(--white);
+      padding: 8px 20px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 25px;
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-title span {
+      color: var(--seafoam);
+    }
+
+    .hero-tagline {
+      font-size: clamp(1.25rem, 3vw, 1.75rem);
+      color: var(--sand);
+      margin-bottom: 40px;
+      font-weight: 300;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--seafoam);
+      color: var(--deep-ocean);
+      padding: 15px 35px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all var(--transition-medium);
+      box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+    }
+
+    .hero-cta:hover {
+      background: var(--white);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 25px rgba(78, 205, 196, 0.5);
+    }
+
+    .hero-image {
+      position: absolute;
+      bottom: -10%;
+      right: -10%;
+      width: 60%;
+      max-width: 500px;
+      opacity: 0.15;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-indicator svg {
+      width: 30px;
+      height: 30px;
+      fill: var(--sand);
+      opacity: 0.7;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+      40% { transform: translateX(-50%) translateY(-10px); }
+      60% { transform: translateX(-50%) translateY(-5px); }
+    }
+
+    /* ==================== Section Base Styles ==================== */
+    .section {
+      padding: 80px 20px;
+    }
+
+    .section-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .section-tag {
+      display: inline-block;
+      color: var(--teal);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--deep-ocean);
+      margin-bottom: 15px;
+    }
+
+    .section-subtitle {
+      font-size: 1.1rem;
+      color: var(--charcoal);
+      opacity: 0.8;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Fade-in animation - visible by default, JS enhances */
+    .fade-in {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+
+    /* Only hide if JS is working (class added by JS) */
+    .fade-in.will-animate {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ==================== About Section ==================== */
+    .about {
+      background: var(--white);
+    }
+
+    .about-content {
+      display: grid;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .about-image-wrapper {
+      position: relative;
+    }
+
+    .about-image {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--teal), var(--deep-ocean));
+    }
+
+    .about-image-accent {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 100px;
+      height: 100px;
+      background: var(--seafoam);
+      border-radius: 20px;
+      z-index: -1;
+    }
+
+    .about-text h3 {
+      font-size: 1.5rem;
+      color: var(--deep-ocean);
+      margin-bottom: 20px;
+    }
+
+    .about-text p {
+      margin-bottom: 20px;
+      line-height: 1.8;
+    }
+
+    .about-highlight {
+      display: flex;
+      gap: 30px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+    }
+
+    .highlight-item {
+      text-align: center;
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .highlight-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--seafoam);
+      line-height: 1;
+    }
+
+    .highlight-label {
+      font-size: 0.85rem;
+      color: var(--charcoal);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ==================== Process Section ==================== */
+    .process {
+      background: linear-gradient(180deg, var(--sand-light) 0%, var(--sand) 100%);
+    }
+
+    .process-steps {
+      display: grid;
+      gap: 30px;
+    }
+
+    .process-step {
+      display: flex;
+      gap: 20px;
+      background: var(--white);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 5px 30px rgba(0, 0, 0, 0.05);
+      transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+    }
+
+    .process-step:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    .step-number {
+      flex-shrink: 0;
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, var(--teal), var(--seafoam));
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .step-content h3 {
+      font-size: 1.25rem;
+      color: var(--deep-ocean);
+      margin-bottom: 10px;
+    }
+
+    .step-content p {
+      color: var(--charcoal);
+      opacity: 0.8;
+    }
+
+    /* ==================== Gallery Section ==================== */
+    .gallery {
+      background: var(--white);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px;
+      cursor: pointer;
+      aspect-ratio: 1;
+    }
+
+    .gallery-item:nth-child(1) {
+      grid-column: span 2;
+      aspect-ratio: 16/9;
+    }
+
+    .gallery-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform var(--transition-slow);
+    }
+
+    /* Placeholder styles for images */
+    .placeholder {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--deep-ocean) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--sand);
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 20px;
+      position: relative;
+      overflow: hidden;
+      min-height: 200px;
+    }
+
+    .placeholder::before {
+      content: '';
+      position: absolute;
+      width: 80px;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.1);
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+      transform: rotate(15deg);
+    }
+
+    .placeholder::after {
+      content: '';
+      position: absolute;
+      width: 60px;
+      height: 90px;
+      background: rgba(255, 255, 255, 0.08);
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+      transform: rotate(-10deg) translateX(30px);
+    }
+
+    .placeholder span {
+      position: relative;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      max-width: 90%;
+    }
+
+    .gallery-image.placeholder {
+      position: absolute;
+      inset: 0;
+      min-height: unset;
+    }
+
+    .gallery-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10, 61, 76, 0.9), transparent);
+      opacity: 0;
+      transition: opacity var(--transition-medium);
+      display: flex;
+      align-items: flex-end;
+      padding: 20px;
+    }
+
+    .gallery-item:hover .gallery-image {
+      transform: scale(1.1);
+    }
+
+    .gallery-item:hover .gallery-overlay {
+      opacity: 1;
+    }
+
+    .gallery-info h4 {
+      color: var(--white);
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+
+    .gallery-info p {
+      color: var(--sand);
+      font-size: 0.85rem;
+    }
+
+    /* ==================== Contact Section ==================== */
+    .contact {
+      background: var(--deep-ocean);
+      color: var(--white);
+    }
+
+    .contact .section-tag {
+      color: var(--seafoam);
+    }
+
+    .contact .section-title {
+      color: var(--white);
+    }
+
+    .contact .section-subtitle {
+      color: var(--sand);
+    }
+
+    .contact-content {
+      display: grid;
+      gap: 40px;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--sand);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      padding: 15px 20px;
+      border: 2px solid transparent;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      color: var(--white);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color var(--transition-fast), background var(--transition-fast);
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--seafoam);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .submit-btn {
+      background: var(--seafoam);
+      color: var(--deep-ocean);
+      padding: 15px 35px;
+      border: none;
+      border-radius: 50px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all var(--transition-medium);
+      align-self: flex-start;
+    }
+
+    .submit-btn:hover {
+      background: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .contact-icon {
+      width: 50px;
+      height: 50px;
+      background: rgba(78, 205, 196, 0.2);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .contact-icon svg {
+      width: 24px;
+      height: 24px;
+      fill: var(--seafoam);
+    }
+
+    .contact-details h4 {
+      font-size: 1rem;
+      margin-bottom: 5px;
+    }
+
+    .contact-details p,
+    .contact-details a {
+      color: var(--sand);
+      font-size: 0.95rem;
+      transition: color var(--transition-fast);
+    }
+
+    .contact-details a:hover {
+      color: var(--seafoam);
+    }
+
+    /* ==================== Footer ==================== */
+    .footer {
+      background: #062833;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 20px;
+    }
+
+    .footer-logo span {
+      color: var(--seafoam);
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .social-link {
+      width: 45px;
+      height: 45px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-medium);
+    }
+
+    .social-link:hover {
+      background: var(--seafoam);
+      transform: translateY(-3px);
+    }
+
+    .social-link svg {
+      width: 20px;
+      height: 20px;
+      fill: var(--white);
+    }
+
+    .social-link:hover svg {
+      fill: var(--deep-ocean);
+    }
+
+    .footer-text {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.9rem;
+    }
+
+    .footer-text a {
+      color: var(--seafoam);
+      transition: color var(--transition-fast);
+    }
+
+    .footer-text a:hover {
+      color: var(--white);
+    }
+
+    /* ==================== Responsive Styles ==================== */
+    @media (min-width: 768px) {
+      .hamburger {
+        display: none;
+      }
+
+      .nav {
+        position: static;
+        width: auto;
+        max-width: none;
+        height: auto;
+        background: transparent;
+        padding: 0;
+      }
+
+      .nav-list {
+        flex-direction: row;
+        gap: 35px;
+      }
+
+      .nav-link {
+        color: var(--charcoal);
+        font-size: 0.95rem;
+      }
+
+      .nav-link:hover {
+        color: var(--teal);
+      }
+
+      .nav-link::after {
+        background: var(--teal);
+      }
+
+      .about-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+      }
+
+      .process-steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      .gallery-item:nth-child(1) {
+        grid-column: span 2;
+        grid-row: span 2;
+        aspect-ratio: 1;
+      }
+
+      .contact-content {
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .section {
+        padding: 120px 40px;
+      }
+
+      .hero {
+        padding: calc(var(--header-height) + 60px) 40px 60px;
+      }
+
+      .about-image {
+        height: 450px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .gallery-item:nth-child(1) {
+        grid-column: span 2;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" id="header">
+    <div class="header-container">
+      <a href="#hero" class="logo">Howelly's <span>Fins</span></a>
+
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+        <span class="hamburger-line"></span>
+      </button>
+
+      <nav class="nav" id="nav">
+        <ul class="nav-list">
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#process" class="nav-link">Process</a></li>
+          <li><a href="#gallery" class="nav-link">Gallery</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-overlay" id="navOverlay"></div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="hero">
+    <div class="hero-content fade-in">
+      <span class="hero-badge">Handcrafted in California</span>
+      <h1 class="hero-title">Howelly's <span>Fins</span></h1>
+      <p class="hero-tagline">Recycled decks. Endless waves.</p>
+      <a href="#gallery" class="hero-cta">
+        View Collection
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Placeholder for decorative fin image -->
+    <div class="hero-image" aria-hidden="true">
+      <!-- Decorative SVG wave pattern -->
+      <svg viewBox="0 0 200 200" fill="none">
+        <path d="M50 150 C80 100, 120 100, 150 50 L150 200 L50 200 Z" fill="rgba(255,255,255,0.1)"/>
+        <path d="M30 180 C60 130, 100 130, 130 80 L130 200 L30 200 Z" fill="rgba(255,255,255,0.05)"/>
+      </svg>
+    </div>
+
+    <div class="scroll-indicator">
+      <svg viewBox="0 0 24 24">
+        <path d="M12 5v14M5 12l7 7 7-7"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="section about" id="about">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">Our Story</span>
+        <h2 class="section-title">Craft Meets Conservation</h2>
+        <p class="section-subtitle">Where worn-out skateboard decks get a second life riding the ocean</p>
+      </div>
+
+      <div class="about-content">
+        <div class="about-image-wrapper fade-in">
+          <!-- Placeholder for Miguel's portrait or workshop photo -->
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=450&fit=crop"
+               alt="Miguel Howell in his workshop, surrounded by skateboard decks and fin-shaping tools"
+               class="about-image">
+          <div class="about-image-accent"></div>
+        </div>
+
+        <div class="about-text fade-in">
+          <h3>Hey, I'm Miguel Howell</h3>
+          <p>After 20 years of skating and surfing up and down the California coast, I started noticing something: my garage was filling up with broken and worn-out skateboard decks. Each one had its own story, its own graphic, its own soul.</p>
+          <p>That's when the idea hit me — what if these decks could keep riding, just on a different kind of board? Turns out, the laminated maple that makes skateboards so strong and responsive is perfect for crafting high-performance surfboard fins.</p>
+          <p>Every fin I make is hand-shaped from reclaimed decks, preserving the original graphics that made each board unique. It's sustainable surfing with serious style.</p>
+
+          <div class="about-highlight">
+            <div class="highlight-item">
+              <span class="highlight-number">500+</span>
+              <span class="highlight-label">Fins Crafted</span>
+            </div>
+            <div class="highlight-item">
+              <span class="highlight-number">200+</span>
+              <span class="highlight-label">Decks Saved</span>
+            </div>
+            <div class="highlight-item">
+              <span class="highlight-number">100%</span>
+              <span class="highlight-label">Handmade</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Process Section -->
+  <section class="section process" id="process">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">The Process</span>
+        <h2 class="section-title">From Street to Sea</h2>
+        <p class="section-subtitle">How old decks become ocean-ready fins in four steps</p>
+      </div>
+
+      <div class="process-steps">
+        <div class="process-step fade-in">
+          <span class="step-number">1</span>
+          <div class="step-content">
+            <h3>Source & Select</h3>
+            <p>I collect worn skateboards from local skate shops, parks, and fellow riders. Each deck is inspected for structural integrity and that perfect graphic that deserves to keep living.</p>
+          </div>
+        </div>
+
+        <div class="process-step fade-in">
+          <span class="step-number">2</span>
+          <div class="step-content">
+            <h3>Template & Trace</h3>
+            <p>Using proven fin templates, I carefully plan each cut to maximize the deck's graphics and grain patterns. The maple layers create natural color variations that make each fin unique.</p>
+          </div>
+        </div>
+
+        <div class="process-step fade-in">
+          <span class="step-number">3</span>
+          <div class="step-content">
+            <h3>Shape & Foil</h3>
+            <p>Each fin is hand-shaped and foiled for optimal water flow. The laminated maple layers are sanded to reveal stunning cross-sections of color — every pass of the sander unveils new patterns.</p>
+          </div>
+        </div>
+
+        <div class="process-step fade-in">
+          <span class="step-number">4</span>
+          <div class="step-content">
+            <h3>Seal & Finish</h3>
+            <p>Multiple coats of marine-grade epoxy seal the fins for ocean durability. The final product is glassed, polished, and ready to rip — carrying the spirit of the skatepark into the lineup.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section class="section gallery" id="gallery">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">Gallery</span>
+        <h2 class="section-title">The Collection</h2>
+        <p class="section-subtitle">Each fin tells two stories — the streets it rode and the waves it'll catch</p>
+      </div>
+
+      <div class="gallery-grid">
+        <!-- Featured/Hero gallery item -->
+        <div class="gallery-item fade-in">
+          <img src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=800&h=450&fit=crop"
+               alt="Set of three fins with vibrant red and black graphics from a Powell-Peralta inspired deck"
+               class="gallery-image">
+          <div class="gallery-overlay">
+            <div class="gallery-info">
+              <h4>The Ripper Set</h4>
+              <p>Thruster set from vintage-style deck</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item fade-in">
+          <img src="https://images.unsplash.com/photo-1531722569936-825d3dd91b15?w=400&h=400&fit=crop"
+               alt="Single keel fin showing layered maple wood grain with teal and orange stripes"
+               class="gallery-image">
+          <div class="gallery-overlay">
+            <div class="gallery-info">
+              <h4>Sunset Keel</h4>
+              <p>Twin keel from a 70s-style cruiser</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item fade-in">
+          <img src="https://images.unsplash.com/photo-1564415315949-7a0c4c73aab4?w=400&h=400&fit=crop"
+               alt="Quad fin set displaying skateboard skull graphic preserved in the fin template"
+               class="gallery-image">
+          <div class="gallery-overlay">
+            <div class="gallery-info">
+              <h4>Bones Brigade</h4>
+              <p>Quad set with skull graphics</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item fade-in">
+          <img src="https://images.unsplash.com/photo-1455729552865-3658a5d39692?w=400&h=400&fit=crop"
+               alt="Twin fin set with natural maple wood showing through abstract geometric patterns"
+               class="gallery-image">
+          <div class="gallery-overlay">
+            <div class="gallery-info">
+              <h4>Geo Flow</h4>
+              <p>Twin fin with geometric art</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item fade-in">
+          <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=400&fit=crop"
+               alt="Detail shot of fin foil edge showing the seven-ply maple layers in cross-section"
+               class="gallery-image">
+          <div class="gallery-overlay">
+            <div class="gallery-info">
+              <h4>Maple Layers</h4>
+              <p>Cross-section detail shot</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item fade-in">
+          <img src="https://images.unsplash.com/photo-1509914398892-963f53e6e2f1?w=400&h=400&fit=crop"
+               alt="Longboard single fin with retro rainbow stripe design from a 1980s skateboard"
+               class="gallery-image">
+          <div class="gallery-overlay">
+            <div class="gallery-info">
+              <h4>Retro Rainbow</h4>
+              <p>Single fin from 80s deck</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="gallery-item fade-in">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop"
+               alt="Thruster set with floral Japanese-inspired artwork preserved from original deck graphic"
+               class="gallery-image">
+          <div class="gallery-overlay">
+            <div class="gallery-info">
+              <h4>Rising Sun</h4>
+              <p>Japanese-inspired thruster</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section contact" id="contact">
+    <div class="section-container">
+      <div class="section-header fade-in">
+        <span class="section-tag">Get in Touch</span>
+        <h2 class="section-title">Let's Create Something</h2>
+        <p class="section-subtitle">Custom orders welcome — send your old deck, get back a set of fins</p>
+      </div>
+
+      <div class="contact-content">
+        <form class="contact-form fade-in" id="contactForm">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Your name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required>
+          </div>
+
+          <div class="form-group">
+            <label for="message">Message</label>
+            <textarea id="message" name="message" placeholder="Tell me about your project or ask any questions..." required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn">Send Message</button>
+        </form>
+
+        <div class="contact-info fade-in">
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <h4>Email</h4>
+              <a href="mailto:miguel@howellysfins.com">miguel@howellysfins.com</a>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <h4>Workshop</h4>
+              <p>San Diego, California</p>
+            </div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">
+              <svg viewBox="0 0 24 24">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+              </svg>
+            </div>
+            <div class="contact-details">
+              <h4>Lead Time</h4>
+              <p>Custom orders: 2-3 weeks</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+      <div class="footer-logo">Howelly's <span>Fins</span></div>
+
+      <div class="social-links">
+        <a href="#" class="social-link" aria-label="Follow us on Instagram">
+          <svg viewBox="0 0 24 24">
+            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+            <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Follow us on Facebook">
+          <svg viewBox="0 0 24 24">
+            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Follow us on YouTube">
+          <svg viewBox="0 0 24 24">
+            <path d="M22.54 6.42a2.78 2.78 0 00-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 00-1.94 2A29 29 0 001 11.75a29 29 0 00.46 5.33A2.78 2.78 0 003.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 001.94-2 29 29 0 00.46-5.25 29 29 0 00-.46-5.33z"/>
+            <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"/>
+          </svg>
+        </a>
+        <a href="#" class="social-link" aria-label="Check out our TikTok">
+          <svg viewBox="0 0 24 24">
+            <path d="M9 12a4 4 0 104 4V4a5 5 0 005 5"/>
+          </svg>
+        </a>
+      </div>
+
+      <p class="footer-text">
+        &copy; 2024 Howelly's Fins. Crafted with 🤙 in San Diego.<br>
+        <a href="#">Privacy</a> · <a href="#">Terms</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== DOM Elements ====================
+    const header = document.getElementById('header');
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.getElementById('nav');
+    const navOverlay = document.getElementById('navOverlay');
+    const navLinks = document.querySelectorAll('.nav-link');
+    const fadeElements = document.querySelectorAll('.fade-in');
+    const contactForm = document.getElementById('contactForm');
+
+    // ==================== Mobile Menu Toggle ====================
+    function toggleMenu() {
+      const isActive = hamburger.classList.contains('active');
+
+      hamburger.classList.toggle('active');
+      nav.classList.toggle('active');
+      navOverlay.classList.toggle('active');
+
+      // Update ARIA attributes
+      hamburger.setAttribute('aria-expanded', !isActive);
+
+      // Prevent body scroll when menu is open
+      document.body.style.overflow = !isActive ? 'hidden' : '';
+    }
+
+    function closeMenu() {
+      hamburger.classList.remove('active');
+      nav.classList.remove('active');
+      navOverlay.classList.remove('active');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', toggleMenu);
+    navOverlay.addEventListener('click', closeMenu);
+
+    // Close menu when clicking nav links
+    navLinks.forEach(link => {
+      link.addEventListener('click', closeMenu);
+    });
+
+    // Close menu on escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && nav.classList.contains('active')) {
+        closeMenu();
+      }
+    });
+
+    // ==================== Sticky Header Shrink ====================
+    let lastScrollY = 0;
+    const scrollThreshold = 50;
+
+    function handleScroll() {
+      const currentScrollY = window.scrollY;
+
+      // Shrink header on scroll
+      if (currentScrollY > scrollThreshold) {
+        header.classList.add('shrunk');
+      } else {
+        header.classList.remove('shrunk');
+      }
+
+      lastScrollY = currentScrollY;
+    }
+
+    // Throttle scroll events
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    // ==================== Scroll Animations ====================
+    // First, mark all elements for animation (hides them)
+    fadeElements.forEach(element => {
+      element.classList.add('will-animate');
+    });
+
+    function handleFadeIn() {
+      fadeElements.forEach(element => {
+        const elementTop = element.getBoundingClientRect().top;
+        const elementBottom = element.getBoundingClientRect().bottom;
+        const windowHeight = window.innerHeight;
+
+        // Element is in viewport
+        if (elementTop < windowHeight * 0.85 && elementBottom > 0) {
+          element.classList.add('visible');
+        }
+      });
+    }
+
+    // Initial check for elements already in view
+    handleFadeIn();
+
+    // Check on scroll
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleFadeIn();
+        });
+      }
+    });
+
+    // ==================== Smooth Scroll ====================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+
+        if (target) {
+          const headerHeight = header.offsetHeight;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+
+    // ==================== Contact Form ====================
+    contactForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Get form data
+      const formData = new FormData(this);
+      const name = formData.get('name');
+      const email = formData.get('email');
+      const message = formData.get('message');
+
+      // Simple validation feedback
+      const submitBtn = this.querySelector('.submit-btn');
+      const originalText = submitBtn.textContent;
+
+      // Simulate form submission
+      submitBtn.textContent = 'Sending...';
+      submitBtn.disabled = true;
+
+      // Simulate async submission (replace with actual form handling)
+      setTimeout(() => {
+        submitBtn.textContent = 'Message Sent!';
+        submitBtn.style.background = '#4ecdc4';
+
+        // Reset form
+        this.reset();
+
+        // Reset button after delay
+        setTimeout(() => {
+          submitBtn.textContent = originalText;
+          submitBtn.disabled = false;
+          submitBtn.style.background = '';
+        }, 3000);
+      }, 1500);
+    });
+
+    // ==================== Resize Handler ====================
+    // Close mobile menu on resize to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 768 && nav.classList.contains('active')) {
+        closeMenu();
+      }
+    });
+  </script>
+</body>
+</html>
