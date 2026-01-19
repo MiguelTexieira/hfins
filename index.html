@@ -396,22 +396,23 @@
       margin: 0 auto;
     }
 
-    /* Fade-in animation - visible by default, JS enhances */
+    /* Fade-in animation using IntersectionObserver */
     .fade-in {
       opacity: 1;
       transform: translateY(0);
       transition: opacity 0.6s ease-out, transform 0.6s ease-out;
     }
 
-    /* Only hide if JS is working (class added by JS) */
-    .fade-in.will-animate {
-      opacity: 0;
-      transform: translateY(30px);
-    }
+    @media (prefers-reduced-motion: no-preference) {
+      .fade-in[data-animate="true"] {
+        opacity: 0;
+        transform: translateY(30px);
+      }
 
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
+      .fade-in[data-animate="true"].visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     /* ==================== About Section ==================== */
@@ -553,6 +554,7 @@
       border-radius: 15px;
       cursor: pointer;
       aspect-ratio: 1;
+      background: linear-gradient(135deg, var(--teal), var(--deep-ocean));
     }
 
     .gallery-item:nth-child(1) {
@@ -1089,7 +1091,7 @@
         <div class="gallery-item fade-in">
           <img src="https://images.unsplash.com/photo-1502680390469-be75c86b636f?w=800&h=450&fit=crop"
                alt="Set of three fins with vibrant red and black graphics from a Powell-Peralta inspired deck"
-               class="gallery-image">
+               class="gallery-image" loading="eager">
           <div class="gallery-overlay">
             <div class="gallery-info">
               <h4>The Ripper Set</h4>
@@ -1101,7 +1103,7 @@
         <div class="gallery-item fade-in">
           <img src="https://images.unsplash.com/photo-1531722569936-825d3dd91b15?w=400&h=400&fit=crop"
                alt="Single keel fin showing layered maple wood grain with teal and orange stripes"
-               class="gallery-image">
+               class="gallery-image" loading="lazy">
           <div class="gallery-overlay">
             <div class="gallery-info">
               <h4>Sunset Keel</h4>
@@ -1113,7 +1115,7 @@
         <div class="gallery-item fade-in">
           <img src="https://images.unsplash.com/photo-1564415315949-7a0c4c73aab4?w=400&h=400&fit=crop"
                alt="Quad fin set displaying skateboard skull graphic preserved in the fin template"
-               class="gallery-image">
+               class="gallery-image" loading="lazy">
           <div class="gallery-overlay">
             <div class="gallery-info">
               <h4>Bones Brigade</h4>
@@ -1125,7 +1127,7 @@
         <div class="gallery-item fade-in">
           <img src="https://images.unsplash.com/photo-1455729552865-3658a5d39692?w=400&h=400&fit=crop"
                alt="Twin fin set with natural maple wood showing through abstract geometric patterns"
-               class="gallery-image">
+               class="gallery-image" loading="lazy">
           <div class="gallery-overlay">
             <div class="gallery-info">
               <h4>Geo Flow</h4>
@@ -1137,7 +1139,7 @@
         <div class="gallery-item fade-in">
           <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=400&fit=crop"
                alt="Detail shot of fin foil edge showing the seven-ply maple layers in cross-section"
-               class="gallery-image">
+               class="gallery-image" loading="lazy">
           <div class="gallery-overlay">
             <div class="gallery-info">
               <h4>Maple Layers</h4>
@@ -1149,7 +1151,7 @@
         <div class="gallery-item fade-in">
           <img src="https://images.unsplash.com/photo-1509914398892-963f53e6e2f1?w=400&h=400&fit=crop"
                alt="Longboard single fin with retro rainbow stripe design from a 1980s skateboard"
-               class="gallery-image">
+               class="gallery-image" loading="lazy">
           <div class="gallery-overlay">
             <div class="gallery-info">
               <h4>Retro Rainbow</h4>
@@ -1161,7 +1163,7 @@
         <div class="gallery-item fade-in">
           <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&h=400&fit=crop"
                alt="Thruster set with floral Japanese-inspired artwork preserved from original deck graphic"
-               class="gallery-image">
+               class="gallery-image" loading="lazy">
           <div class="gallery-overlay">
             <div class="gallery-info">
               <h4>Rising Sun</h4>
@@ -1363,35 +1365,22 @@
     });
 
     // ==================== Scroll Animations ====================
-    // First, mark all elements for animation (hides them)
-    fadeElements.forEach(element => {
-      element.classList.add('will-animate');
-    });
+    // Use IntersectionObserver for reliable fade-in animations
+    if ('IntersectionObserver' in window) {
+      // Mark elements for animation only after observer is ready
+      fadeElements.forEach(el => el.setAttribute('data-animate', 'true'));
 
-    function handleFadeIn() {
-      fadeElements.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const elementBottom = element.getBoundingClientRect().bottom;
-        const windowHeight = window.innerHeight;
-
-        // Element is in viewport
-        if (elementTop < windowHeight * 0.85 && elementBottom > 0) {
-          element.classList.add('visible');
-        }
-      });
-    }
-
-    // Initial check for elements already in view
-    handleFadeIn();
-
-    // Check on scroll
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          handleFadeIn();
+      const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            fadeObserver.unobserve(entry.target);
+          }
         });
-      }
-    });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+      fadeElements.forEach(el => fadeObserver.observe(el));
+    }
 
     // ==================== Smooth Scroll ====================
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
